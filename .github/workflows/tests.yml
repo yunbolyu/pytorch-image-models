@@ -50,16 +50,23 @@ jobs:
     - name: Install requirements
       run: |
         pip install -r requirements.txt
+        pip install pytest pytest-cov
     - name: Run tests on Windows
       if: startsWith(matrix.os, 'windows')
       env:
         PYTHONDONTWRITEBYTECODE: 1
       run: |
-        pytest -vv tests
+        pytest --cov=./ --cov-report=xml -vv tests
     - name: Run '${{ matrix.testmarker }}' tests on Linux / Mac
       if: ${{ !startsWith(matrix.os, 'windows') }}
       env:
         LD_PRELOAD: /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
         PYTHONDONTWRITEBYTECODE: 1
       run: |
-        pytest -vv --forked --durations=0 ${{ matrix.testmarker }} tests
+        pytest --cov=./ --cov-report=xml -vv --forked --durations=0 ${{ matrix.testmarker }} tests
+
+    - name: Upload coverage reports to Codecov with GitHub Action
+      uses: codecov/codecov-action@v3      
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./coverage.xml
