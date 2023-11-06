@@ -56,14 +56,14 @@ jobs:
       env:
         PYTHONDONTWRITEBYTECODE: 1
       run: |
-        pytest --cov=./ --cov-report=xml -vv tests
+        pytest --cov=./timm --cov-report=xml -vv tests
     - name: Run '${{ matrix.testmarker }}' tests on Linux / Mac
       if: ${{ !startsWith(matrix.os, 'windows') }}
       env:
         LD_PRELOAD: /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
         PYTHONDONTWRITEBYTECODE: 1
       run: |
-        pytest --cov=./ --cov-report=xml -vv --forked --durations=0 ${{ matrix.testmarker }} tests
+        pytest --cov=./timm --cov-report=xml -vv --forked --durations=0 ${{ matrix.testmarker }} tests
 
     - name: Upload coverage reports to Codecov with GitHub Action
       uses: codecov/codecov-action@v3      
